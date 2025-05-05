@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useWishListStore from '../store/wishListStroe';
 import { toast } from 'react-hot-toast';
 import Fotter from './Fotter';
+import Navbar from './Navbar';
 import useAuth from "../store/useAuth";
 
 export default function WishlistList() {

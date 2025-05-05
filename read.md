@@ -142,7 +142,7 @@ frontend/
 ├── public/
 ├── src/
 │   ├── components/    # Reusable components
-│   ├── pages/         # Application pages
+│   ├
 │   ├── store/         # Zustand stores
 │   ├── utility/       # Axios configuration
 │   └── App.js         # Main application component
