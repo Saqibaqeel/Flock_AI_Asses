@@ -71,20 +71,17 @@ const useProductStore = create((set, get) => ({
 
   // Delete a product
   deleteProduct: async (id) => {
-    set({ loading: true, error: null });
     try {
-      await axiosInstance.delete(`/products/delete-product/:id${id}`);
-      set(state => ({
-        products: state.products.filter(p => p._id !== id),
-        loading: false
+      await axiosInstance.delete(`/products/delete-product/${id}`);
+      set((state) => ({
+        products: state.products.filter(product => product._id !== id)
       }));
       toast.success('Product deleted successfully');
-    } catch (err) {
-      console.error('deleteProduct error:', err);
-      set({ loading: false, error: err });
-      toast.error(err.response?.data?.msg || 'Failed to delete product');
+    } catch (error) {
+      console.error('Delete error:', error.response?.data);
+      toast.error(error.response?.data?.message || 'Deletion failed');
     }
-  }
+  },
 }));
 
 export default useProductStore;

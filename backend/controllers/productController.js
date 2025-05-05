@@ -69,37 +69,34 @@ editProduct = async (req, res) => {
     return res.status(500).json({ msg: 'Server error' });
   }
 };
-
-deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res) => {
   try {
-    const productId = req.params.id;
-    const userId    = req.user._id;
+    const product = await Product.findOne({
+      _id: req.params.id,
+      addedBy: req.user._id
+    });
 
-    // 1. Load product
-    const product = await Product.findById(productId);
     if (!product) {
-      return res.status(404).json({ msg: 'Product not found.' });
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found or unauthorized'
+      });
     }
 
-    // 2. Check ownership
-    if (!product.addedBy.equals(userId)) {
-      return res.status(403).json({ msg: 'Not authorized to delete this product.' });
-    }
-
-    // 3. Remove product from all wishlists that include it
-    await Wishlist.updateMany(
-      { products: productId },
-      { $pull: { products: productId } }
-    );
-
-    // 4. Delete the product document
-    await Product.findByIdAndDelete(productId);
-
-    return res.status(200).json({ msg: 'Product deleted successfully.' });
-
-  } catch (err) {
-    console.error('deleteProduct error:', err);
-    return res.status(500).json({ msg: 'Server error' });
+    await product.deleteOne();
+    
+    res.status(200).json({
+      success: true,
+      message: 'Product deleted successfully'
+    });
+    
+  } catch (error) {
+    console.error('Delete error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message
+    });
   }
 };
 
